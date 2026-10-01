@@ -1,0 +1,185 @@
+<Window x:Class="ByteWorkbench.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Byte Workbench"
+        Width="1180"
+        Height="820"
+        MinWidth="960"
+        MinHeight="680"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource WindowBrush}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="#0E1219" BorderBrush="{StaticResource CardBorderBrush}" BorderThickness="0,0,0,1" Padding="26,18">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <TextBlock Text="Byte Workbench" FontSize="25" FontWeight="SemiBold" />
+                    <TextBlock Text="Convert bytes, hex, binary, decimal, octal and text — with endian and signed views." Foreground="{StaticResource MutedTextBrush}" Margin="0,4,0,0" />
+                </StackPanel>
+                <Button Grid.Column="1" Content="Clear" Style="{StaticResource SecondaryButton}" Command="{Binding ClearCommand}" VerticalAlignment="Center" />
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1" Margin="24">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="370" />
+                <ColumnDefinition Width="18" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <Border Background="{StaticResource CardBrush}" BorderBrush="{StaticResource CardBorderBrush}" BorderThickness="1" CornerRadius="12" Padding="18">
+                        <StackPanel>
+                            <TextBlock Text="Input" FontSize="18" FontWeight="SemiBold" />
+                            <TextBlock Text="Choose how the value should be parsed." Foreground="{StaticResource MutedTextBrush}" Margin="0,4,0,16" />
+
+                            <TextBlock Text="Format" FontWeight="SemiBold" Margin="0,0,0,6" />
+                            <ComboBox ItemsSource="{Binding InputFormats}" SelectedItem="{Binding SelectedInputFormat}" />
+
+                            <TextBlock Text="Byte order" FontWeight="SemiBold" Margin="0,16,0,6" />
+                            <ComboBox ItemsSource="{Binding ByteOrders}" SelectedItem="{Binding SelectedByteOrder}" />
+
+                            <TextBlock Text="Bit width" FontWeight="SemiBold" Margin="0,16,0,6" />
+                            <ComboBox ItemsSource="{Binding BitWidths}" SelectedItem="{Binding SelectedBitWidth}" />
+
+                            <TextBlock Text="Value" FontWeight="SemiBold" Margin="0,16,0,6" />
+                            <TextBox Text="{Binding InputText, UpdateSourceTrigger=PropertyChanged}"
+                                     AcceptsReturn="True"
+                                     TextWrapping="Wrap"
+                                     MinHeight="126"
+                                     VerticalScrollBarVisibility="Auto" />
+
+                            <Border Background="#1E1418" BorderBrush="#4A2730" BorderThickness="1" CornerRadius="8" Padding="10" Margin="0,12,0,0">
+                                <Border.Style>
+                                    <Style TargetType="Border">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ErrorMessage}" Value="">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+                                <TextBlock Text="{Binding ErrorMessage}" Foreground="{StaticResource DangerBrush}" TextWrapping="Wrap" />
+                            </Border>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Background="{StaticResource CardBrush}" BorderBrush="{StaticResource CardBorderBrush}" BorderThickness="1" CornerRadius="12" Padding="18" Margin="0,16,0,0">
+                        <StackPanel>
+                            <TextBlock Text="Examples" FontSize="16" FontWeight="SemiBold" />
+                            <TextBlock Text="Load a sample to see how each mode behaves." Foreground="{StaticResource MutedTextBrush}" Margin="0,4,0,12" />
+                            <WrapPanel>
+                                <Button Content="Hex" Style="{StaticResource SecondaryButton}" Margin="0,0,8,8" Command="{Binding LoadExampleCommand}" CommandParameter="Hex" />
+                                <Button Content="Binary" Style="{StaticResource SecondaryButton}" Margin="0,0,8,8" Command="{Binding LoadExampleCommand}" CommandParameter="Binary" />
+                                <Button Content="Bytes" Style="{StaticResource SecondaryButton}" Margin="0,0,8,8" Command="{Binding LoadExampleCommand}" CommandParameter="Bytes" />
+                                <Button Content="Signed" Style="{StaticResource SecondaryButton}" Margin="0,0,8,8" Command="{Binding LoadExampleCommand}" CommandParameter="Signed" />
+                            </WrapPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Background="#111828" BorderBrush="#243255" BorderThickness="1" CornerRadius="12" Padding="16" Margin="0,16,0,0">
+                        <StackPanel>
+                            <TextBlock Text="Tips" FontWeight="SemiBold" />
+                            <TextBlock Foreground="{StaticResource MutedTextBrush}" TextWrapping="Wrap" Margin="0,8,0,0">
+                                Auto mode treats plain digits as decimal. Prefix binary with 0b, hex with 0x, and octal with 0o. For a byte array, use spaces or commas, for example: 40 0D B0 02.
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+
+            <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <Border Background="{StaticResource CardBrush}" BorderBrush="{StaticResource CardBorderBrush}" BorderThickness="1" CornerRadius="12" Padding="18">
+                        <StackPanel>
+                            <Grid Margin="0,0,0,14">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="Representations" FontSize="18" FontWeight="SemiBold" />
+                                    <TextBlock Text="{Binding Summary}" Foreground="{StaticResource MutedTextBrush}" Margin="0,4,0,0" />
+                                </StackPanel>
+                                <Border Grid.Column="1" Background="#20294A" CornerRadius="12" Padding="10,5" VerticalAlignment="Top">
+                                    <TextBlock Text="{Binding DetectedFormat}" Foreground="#BDC6FF" FontWeight="SemiBold" FontSize="12" />
+                                </Border>
+                            </Grid>
+
+                            <ItemsControl ItemsSource="{Binding Representations}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border BorderBrush="{StaticResource CardBorderBrush}" BorderThickness="0,0,0,1" Padding="0,11">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="155" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" Margin="0,0,16,0">
+                                                    <TextBlock Text="{Binding Label}" FontWeight="SemiBold" />
+                                                    <TextBlock Text="{Binding Hint}" Foreground="{StaticResource MutedTextBrush}" FontSize="11" TextWrapping="Wrap" />
+                                                </StackPanel>
+                                                <TextBox Grid.Column="1" Text="{Binding Value}" IsReadOnly="True" BorderThickness="0" Background="Transparent" Padding="0" TextWrapping="Wrap" VerticalContentAlignment="Center" />
+                                                <Button Grid.Column="2" Content="Copy" Style="{StaticResource SecondaryButton}" Padding="9,4" Margin="10,0,0,0"
+                                                        Command="{Binding DataContext.CopyCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                        CommandParameter="{Binding Value}" />
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Background="{StaticResource CardBrush}" BorderBrush="{StaticResource CardBorderBrush}" BorderThickness="1" CornerRadius="12" Padding="18" Margin="0,16,0,0">
+                        <StackPanel>
+                            <TextBlock Text="Endian comparison" FontSize="18" FontWeight="SemiBold" />
+                            <TextBlock Text="The same raw bytes interpreted in each byte order." Foreground="{StaticResource MutedTextBrush}" Margin="0,4,0,14" />
+
+                            <Grid Margin="0,0,0,6">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="145" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Type" Foreground="{StaticResource MutedTextBrush}" FontWeight="SemiBold" />
+                                <TextBlock Grid.Column="1" Text="Big endian" Foreground="{StaticResource MutedTextBrush}" FontWeight="SemiBold" />
+                                <TextBlock Grid.Column="2" Text="Little endian" Foreground="{StaticResource MutedTextBrush}" FontWeight="SemiBold" />
+                            </Grid>
+
+                            <ItemsControl ItemsSource="{Binding EndianRows}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border BorderBrush="{StaticResource CardBorderBrush}" BorderThickness="0,0,0,1" Padding="0,10">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="145" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Text="{Binding Label}" FontWeight="SemiBold" />
+                                                <TextBlock Grid.Column="1" Text="{Binding BigEndian}" FontFamily="Consolas" TextWrapping="Wrap" Margin="0,0,14,0" />
+                                                <TextBlock Grid.Column="2" Text="{Binding LittleEndian}" FontFamily="Consolas" TextWrapping="Wrap" />
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</Window>
